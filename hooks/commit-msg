@@ -1,0 +1,6 @@
+#!/bin/sh
+set -euf
+find .git/hooks/commit-msg.d \
+-type f \( -perm -u=x -o -perm -g=x -o -perm -o=x \) \
+-exec test -x {} \; -print0 |
+xargs -0I{} -n1 sh -c "{}"
