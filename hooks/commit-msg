@@ -1,6 +1,7 @@
 #!/bin/sh
 set -euf
-find .git/hooks/commit-msg.d \
--type f \( -perm -u=x -o -perm -g=x -o -perm -o=x \) \
--exec test -x {} \; -print0 |
-xargs -0I{} -n1 sh -c "{}"
+
+# sh_all: shell all the executable commands in a given directory and subdirectories
+sh_all() { find "${1:-.}" -type f \( -perm -u=x -o -perm -g=x -o -perm -o=x \) -exec test -x {} \; -print0 \; | xargs -0I{} -n1 sh -c "{}" ; }
+
+sh_all .git/hooks/commit-msg.d
