@@ -7,24 +7,15 @@
 # message file.  If the hook fails with a non-zero status,
 # the commit is aborted.
 #
-# To enable this hook, rename this file to "prepare-commit-msg".
+# This hook includes two examples. 
 
-# This hook includes three examples. The first one removes the
-# "# Please enter the commit message..." help message.
-#
-# The second includes the output of "git diff --name-status -r"
+# Example 1 includes the output of "git diff --name-status -r"
 # into the message, just before the "git status" output.  It is
 # commented because it doesn't cope with --amend or with squashed
 # commits.
 #
-# The third example adds a Signed-off-by line to the message, that can
+# Example 2 adds a Signed-off-by line to the message, that can
 # still be edited.  This is rarely a good idea.
-
-COMMIT_MSG_FILE=$1
-COMMIT_SOURCE=$2
-SHA1=$3
-
-/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
 
 # case "$COMMIT_SOURCE,$SHA1" in
 #  ,|template,)
