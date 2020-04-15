@@ -1,7 +1,10 @@
 #!/bin/sh
 set -euf
 
-#find ".git/hooks/pre-commit.d" -type f \( -perm -u=x -o -perm -g=x -o -perm -o=x \) -exec test -x {} \; -print0 | xargs -0I{} -n1 sh -c "{}"
+.git/hooks/helpers/file-name-must-not-start-with "tmp"
+.git/hooks/helpers/file-name-must-not-end-with ".env"
+.git/hooks/helpers/file-name-must-not-contain "unversioned"
+.git/hooks/helpers/file-text-must-end-with-newline
 
 # sh_all: shell all the executable commands in a given directory and subdirectories
 sh_all() { find "${1:-.}" -type f \( -perm -u=x -o -perm -g=x -o -perm -o=x \) -exec test -x {} \; -print0 | xargs -0I{} -n1 sh -c "{}" ; }

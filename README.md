@@ -2,31 +2,45 @@
 
 This repo has example git hooks and helpers.
 
-For example our git hook named `pre-commit` runs all our scripts in our directory `pre-commit.d`.
-
-For example our git hook `precommit.d/file-name-must-not-end-with-env.sh` helps protect from accidentially committing a environment variable settings file.
-
-The git hook prints messages such as:
+For example our git hook named `pre-commit` runs these:
 
 ```sh
-Error: file name must not end with `.env`
-File: .env
-File: production.env
-File: development.env
+.git/hooks/helpers/file-name-must-not-start-with "tmp"
+.git/hooks/helpers/file-name-must-not-end-with ".env"
+.git/hooks/helpers/file-name-must-not-contain "unversioned"
+.git/hooks/helpers/file-text-must-end-with-newline
 ```
 
-The git hook source code is shell script:
+Then runs any scripts in the corresponding directory:
+
+```sh
+.git/hooks/pre-commit.d
+```
+
+The git hooks print messages such as:
+
+```sh
+File `tmp/example.txt` name must not start with `tmp`
+File `environments/example.env` name must not end with `.env`
+File `vendor/unversioned/example.bin` name must not contain "unversioned"
+File `doc/example.txt` text must end with newline
+```
+
+The git hooks can use any language, such as this example using POSIX shell:
+
 ```sh
 #!/bin/sh
 set -euf
+target="$1"
 exit_code=0
 
-for x in $(git diff --cached --name-only | grep '\.env$'); do
-	if [ $exit_code -eq 0 ]; then
-		exit_code=1
-		printf %s\\n 'Error: file name must not end with `.env`.'
-	fi
-	printf %s\\n "File: $x"
+for file_name in $(git diff --cached --name-only); do
+    case "$file_name"
+        "$target"*)
+            exit_code=1
+            printf %s\\n "File \`$file_name\` name must not start with \`$target\`."
+        ;;
+    esac
 done
 
 exit $exit_code
