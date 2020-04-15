@@ -12,3 +12,10 @@ For example, our git hook named `pre-commit` does this:
 
   * If a file returns an error, then stop.
 
+We use this approach to enable us to use multiple git hooks.
+
+For example, we use pre-commit hooks such as:
+
+  * `precommit.d/file-name-must-not-end-with-env`
+
+  * `precommit.d/file-text-must-end-with-newline.sh`
